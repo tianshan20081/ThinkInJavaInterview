@@ -1,0 +1,818 @@
+http://blog.csdn.net/lifetragedy/article/details/10363489
+ think in java interview-高级开发人员面试宝典(八) 
+ 面经出了7套，收到许多读者的Email，有许多人说了，这些基础知识是不是为了后面进一步的”通向架构师的道路“做准备的？
+
+
+对的，你们没有猜错，就是这样的，我一直在酝酿后面的”通向架构师的道路“如何开章。
+
+
+说实话，我已经在肚子里准备好的后面的”通向架构师的道路“的内容自己觉得如果一下子全拿出来的话，很多人吃不消，因为架构越来越复杂，用到的知识越来越多，而且很多都是各知识点的混合应用。
+
+
+所以，先以这几套面经来铺路，我们把基础打实了，才能把大楼造的更好。因为，一个架构师首先他是一个程序员，他的基础知识必须非常的扎实，API对于架构师来说已经不太需要eclipse的code insight(即在eclipse编辑器里打一个小点点就可以得到后面的函数），尤其是一些常用的JAVA API来说，是必须熟记于心的。
+
+
+下面我们继续来几天面经，顺带便复习一下JAVA和数据库的一些基础。
+
+
+Java IO流的复习
+
+
+大家平时J2EE写多了，JAVA的IO操作可能都已经生疏了，面试时如果来上这么几道，是不是有点”其实这个问题很简单，可是我就是想不起来“的感觉啊？
+
+
+呵呵！
+
+
+JAVA的IO操作太多，我这边挑腾迅，盛大和百度的几道面试题，并整理出答案来供大家参考。
+
+
+InputFromConsole
+
+这个最简单不过了，从console接受用户输入的字符，如和用户有交互的命令行。
+
+
+如果你不复习的话，嘿嘿，还真答不出，来看：
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    public class InputFromConsole {  
+      
+        /** 
+         * @param args 
+         */  
+        public static void main(String[] args) throws Exception {  
+            int a = 0;  
+            byte[] input = new byte[1024];  
+            System.in.read(input);  
+            System.out.println("your input is: " + new String(input));  
+      
+        }  
+      
+    }  
+
+
+ListDir
+
+列出给出路径下所有的目录，包括子目录
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    import java.io.*;  
+      
+    public class ListMyDir {  
+      
+        /** 
+         * @param args 
+         */  
+        public static void main(String[] args) {  
+            String fileName = "D:" + File.separator + "tomcat2";  
+            File f = new File(fileName);  
+            File[] fs = f.listFiles();  
+            for (int i = 0; i < fs.length; i++) {  
+                System.out.println(fs[i].getName());  
+            }  
+      
+        }  
+      
+    }  
+
+
+咦，上面这个程序只列出了一层目录，我们想连子目录一起List出来怎么办？
+
+
+ListMyDirWithSubDir
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    import java.io.*;  
+      
+    public class ListMyDirWithSubDir {  
+      
+        /** 
+         * @param args 
+         */  
+        public void print(File f) {  
+            if (f != null) {  
+                if (f.isDirectory()) {  
+                    File[] fileArray = f.listFiles();  
+                    if (fileArray != null) {  
+                        for (int i = 0; i < fileArray.length; i++) {  
+                            print(fileArray[i]);  
+                        }  
+                    }  
+                } else {  
+                    System.out.println(f);  
+                }  
+            }  
+        }  
+      
+        public static void main(String[] args) {  
+            String fileName = "D:" + File.separator + "tomcat2";  
+            File f = new File(fileName);  
+            ListMyDirWithSubDir listDir = new ListMyDirWithSubDir();  
+            listDir.print(f);  
+      
+        }  
+    }  
+
+
+
+InputStreamDemo
+
+从外部读入一个文件
+
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    import java.io.File;  
+    import java.io.FileInputStream;  
+    import java.io.FileOutputStream;  
+    import java.io.InputStream;  
+    import java.io.OutputStream;  
+      
+    public class InputStreamDemo {  
+        public void readFile(String fileName) {  
+            File srcFile = new File(fileName);  
+            InputStream in = null;  
+            try {  
+                in = new FileInputStream(srcFile);  
+                byte[] b = new byte[(int) srcFile.length()];  
+                for (int i = 0; i < b.length; i++) {  
+                    b[i] = (byte) in.read();  
+                }  
+                System.out.println(new String(b));  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            } finally {  
+                try {  
+                    if (in != null) {  
+                        in.close();  
+                        in = null;  
+                    }  
+                } catch (Exception e) {  
+                }  
+            }  
+        }  
+      
+        public static void main(String[] args) {  
+            InputStreamDemo id = new InputStreamDemo();  
+            String src = "D:" + File.separator + "hello.txt";  
+            id.readFile(src);  
+        }  
+      
+    }  
+
+
+OutputStreamDemo
+
+讲完了InputStream来讲OutputStream，输出内容至外部的一个文件
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    import java.io.*;  
+      
+    public class OutputStreamDemo {  
+      
+        public void writeWithByte() {  
+            String fileName = "D:" + File.separator + "hello.txt";  
+            OutputStream out = null;  
+            File f = new File(fileName);  
+            try {  
+                out = new FileOutputStream(f, true);  
+                String str = "   [Publicity ministry of ShangHai Municipal committee of CPC]";  
+                byte[] b = str.getBytes();  
+                out.write(b);  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            } finally {  
+                try {  
+                    if (out != null) {  
+                        out.close();  
+                        out = null;  
+                    }  
+                } catch (Exception e) {  
+                }  
+            }  
+        }  
+      
+        public void writeWithByteArray() {  
+            String fileName = "D:" + File.separator + "hello.txt";  
+            OutputStream out = null;  
+            File f = new File(fileName);  
+            try {  
+                out = new FileOutputStream(f, true);  
+                String str = "   [hello with byte yi ge ge xie]";  
+                byte[] b = str.getBytes();  
+                for (int i = 0; i < b.length; i++) {  
+                    out.write(b[i]);  
+                }  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            } finally {  
+                try {  
+                    if (out != null) {  
+                        out.close();  
+                        out = null;  
+                    }  
+                } catch (Exception e) {  
+                }  
+            }  
+        }  
+      
+        public static void main(String[] args) {  
+            OutputStreamDemo od = new OutputStreamDemo();  
+            od.writeWithByte();  
+            od.writeWithByteArray();  
+      
+        }  
+      
+    }  
+
+
+这个Demo里分别用了”writeWithByte“和 ”writeWithByteArray“两种方法，注意查看
+
+
+CopyFile
+
+我们讲完了InputStream和OutputStream，我们就可以自己实现一个File Copy的功能了，来看
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    import java.io.*;  
+      
+    public class CopyFile {  
+      
+        public void copy(String src, String des) {  
+            File srcFile = new File(src);  
+            File desFile = new File(des);  
+            InputStream in = null;  
+            OutputStream out = null;  
+            try {  
+                in = new FileInputStream(srcFile);  
+                out = new FileOutputStream(desFile);  
+                byte[] b = new byte[(int) srcFile.length()];  
+                for (int i = 0; i < b.length; i++) {  
+                    b[i] = (byte) in.read();  
+                }  
+                out.write(b);  
+                System.out.println("copied [" + srcFile.getName() + "]    with    "  
+                        + srcFile.length());  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            } finally {  
+                try {  
+                    if (out != null) {  
+                        out.close();  
+                        out = null;  
+                    }  
+                } catch (Exception e) {  
+                }  
+                try {  
+                    if (in != null) {  
+                        in.close();  
+                        in = null;  
+                    }  
+                } catch (Exception e) {  
+                }  
+            }  
+        }  
+      
+        public static void main(String[] args) {  
+            CopyFile cp = new CopyFile();  
+            String src = "D:" + File.separator + "UltraEdit.zip";  
+            String des = "D:" + File.separator + "UltraEdit_Copy.zip";  
+            long sTime = System.currentTimeMillis();  
+            cp.copy(src, des);  
+            long eTime = System.currentTimeMillis();  
+            System.out.println("Total spend: " + (eTime - sTime));  
+        }  
+      
+    }  
+
+
+运行后显示：
+
+
+来看我们被Copy的这个文件的大小：
+
+
+也不大，怎么用了7秒多？
+
+原是我们没有使用Buffer这个东西，即缓冲，性能会相差多大呢？来看
+
+
+BufferInputStreamDemo
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    import java.io.*;  
+      
+    public class BufferInputStreamDemo {  
+      
+        /** 
+         * @param args 
+         */  
+        public void copy(String src, String des) {  
+            File srcFile = new File(src);  
+            File desFile = new File(des);  
+            BufferedInputStream bin = null;  
+            BufferedOutputStream bout = null;  
+            try {  
+                bin = new BufferedInputStream(new FileInputStream(srcFile));  
+                bout = new BufferedOutputStream(new FileOutputStream(desFile));  
+                byte[] b = new byte[1024];  
+                while (bin.read(b) != -1) {  
+                    bout.write(b);  
+                }  
+                bout.flush();  
+                System.out.println("copied [" + srcFile.getName() + "]    with    "  
+                        + srcFile.length());  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            } finally {  
+                try {  
+                    if (bout != null) {  
+                        bout.close();  
+                        bout = null;  
+                    }  
+                } catch (Exception e) {  
+                }  
+                try {  
+                    if (bin != null) {  
+                        bin.close();  
+                        bin = null;  
+                    }  
+                } catch (Exception e) {  
+                }  
+            }  
+        }  
+      
+        public static void main(String[] args) {  
+            BufferInputStreamDemo bd = new BufferInputStreamDemo();  
+            String src = "D:" + File.separator + "UltraEdit.zip";  
+            String des = "D:" + File.separator + "UltraEdit_Copy.zip";  
+            long sTime = System.currentTimeMillis();  
+            bd.copy(src, des);  
+            long eTime = System.currentTimeMillis();  
+            System.out.println("Total spend: " + (eTime - sTime));  
+      
+        }  
+      
+    }  
+
+我们Copy同样一个文件，用了多少时间呢？来看！
+
+丫只用了14毫秒，CALL！！！
+
+
+ByteArrayDemo
+
+来看看使用ByteArray输出文件吧
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    import java.io.*;  
+      
+    public class ByteArrayDemo {  
+      
+        /** 
+         * @param args 
+         */  
+        public void testByteArray() {  
+            String str = "HOLLYJESUS";  
+            ByteArrayInputStream input = null;  
+            ByteArrayOutputStream output = null;  
+            try {  
+                input = new ByteArrayInputStream(str.getBytes());  
+                output = new ByteArrayOutputStream();  
+                int temp = 0;  
+                while ((temp = input.read()) != -1) {  
+                    char ch = (char) temp;  
+                    output.write(Character.toLowerCase(ch));  
+                }  
+                String outStr = output.toString();  
+                input.close();  
+                output.close();  
+                System.out.println(outStr);  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            } finally {  
+                try {  
+                    if (output != null) {  
+                        output.close();  
+                        output = null;  
+                    }  
+                } catch (Exception e) {  
+                }  
+                try {  
+                    if (input != null) {  
+                        input.close();  
+                        input = null;  
+                    }  
+                } catch (Exception e) {  
+                }  
+            }  
+        }  
+      
+        public static void main(String[] args) {  
+            ByteArrayDemo bd = new ByteArrayDemo();  
+            bd.testByteArray();  
+      
+        }  
+      
+    }  
+
+
+RandomAccess
+
+有种输出流叫Random，你们还记得吗？学习时记得的，工作久了，HOHO，忘了，它到底有什么特殊的地方呢？来看：
+
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    import java.io.*;  
+      
+    public class RandomAccess {  
+        public void writeToFile() {  
+            String fileName = "D:" + File.separator + "hello.txt";  
+            RandomAccessFile randomIO = null;  
+            try {  
+      
+                File f = new File(fileName);  
+                randomIO = new RandomAccessFile(f, "rw");  
+                randomIO.writeBytes("asdsad");  
+                randomIO.writeInt(12);  
+                randomIO.writeBoolean(true);  
+                randomIO.writeChar('A');  
+                randomIO.writeFloat(1.21f);  
+                randomIO.writeDouble(12.123);  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            } finally {  
+                try {  
+                    if (randomIO != null) {  
+                        randomIO.close();  
+                        randomIO = null;  
+                    }  
+                } catch (Exception e) {  
+                }  
+            }  
+        }  
+      
+        public static void main(String[] args) {  
+            RandomAccess randomA = new RandomAccess();  
+            randomA.writeToFile();  
+        }  
+    }  
+
+
+它输出后的文件是怎么样的呢？
+
+
+
+PipeStream
+
+这个流很特殊，我们在线程操作时，两个线程都在运行，这时通过发送一个指令让某个线程do something，我们在以前的jdk1.4中为了实现这样的功能，使用的就是这个PipeStream
+
+
+先来看两个类，一个叫SendMessage，即发送一个指令。一个叫ReceiveMessage，用于接受指令。
+SendMessage
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    import java.io.*;  
+      
+    public class SendMessage implements Runnable {  
+        private PipedOutputStream out = null;  
+      
+        public PipedOutputStream getOut() {  
+            return this.out;  
+        }  
+      
+        public SendMessage() {  
+            this.out = new PipedOutputStream();  
+        }  
+      
+        public void send() {  
+      
+            String msg = "start";  
+            try {  
+                out.write(msg.getBytes());  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            } finally {  
+                try {  
+                    if (out != null) {  
+                        out.close();  
+                        out = null;  
+                    }  
+                } catch (Exception e) {  
+                }  
+            }  
+        }  
+      
+        public void run() {  
+            try {  
+                System.out.println("waiting for signal...");  
+                Thread.sleep(2000);  
+                send();  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            }  
+        }  
+    }  
+
+
+ReceiveMessage
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    import java.io.*;  
+      
+    public class ReceiveMessage implements Runnable {  
+        private PipedInputStream input = null;  
+      
+        public PipedInputStream getInput() {  
+            return this.input;  
+        }  
+      
+        public ReceiveMessage() {  
+            this.input = new PipedInputStream();  
+        }  
+      
+        private void receive() {  
+      
+            byte[] b = new byte[1000];  
+            int len = 0;  
+            String msg = "";  
+            try {  
+                len = input.read(b);  
+                msg = new String(b, 0, len);  
+                if (msg.equals("start")) {  
+                    System.out  
+                            .println("received the start message, receive now can do something......");  
+                    Thread.interrupted();  
+                }  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            } finally {  
+                try {  
+                    if (input != null) {  
+                        input.close();  
+                        input = null;  
+                    }  
+                } catch (Exception e) {  
+                }  
+            }  
+        }  
+      
+        public void run() {  
+            try {  
+                receive();  
+            } catch (Exception e) {  
+            }  
+        }  
+    }  
+
+
+如何使用这两个类呢？
+
+
+TestPipeStream
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    public class TestPipeStream {  
+      
+        /** 
+         * @param args 
+         */  
+        public static void main(String[] args) {  
+            SendMessage send = new SendMessage();  
+            ReceiveMessage receive = new ReceiveMessage();  
+            try {  
+                send.getOut().connect(receive.getInput());  
+                Thread t1 = new Thread(send);  
+                Thread t2 = new Thread(receive);  
+                t1.start();  
+                t2.start();  
+      
+            } catch (Exception e) {  
+                e.printStackTrace();  
+            }  
+      
+        }  
+      
+    }  
+
+
+注意这边有一个send.getOut().connect(receive.getInput());
+
+
+这个方法就把两个线程”connect“起来了。
+
+
+Serializable的IO操作
+
+把一个类序列化到磁盘上，怎么做？
+
+
+先来看我们要序列化的一个Java Bean
+
+
+Person
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    import java.io.Serializable;  
+      
+    public class Person implements Serializable {  
+      
+        private String name = "";  
+        private String age = "";  
+        private String personId = "";  
+      
+        public String getName() {  
+            return name;  
+        }  
+      
+        public void setName(String name) {  
+            this.name = name;  
+        }  
+      
+        public String getAge() {  
+            return age;  
+        }  
+      
+        public void setAge(String age) {  
+            this.age = age;  
+        }  
+      
+        public String getPersonId() {  
+            return personId;  
+        }  
+      
+        public void setPersonId(String personId) {  
+            this.personId = personId;  
+        }  
+      
+        public String getCellPhoneNo() {  
+            return cellPhoneNo;  
+        }  
+      
+        public void setCellPhoneNo(String cellPhoneNo) {  
+            this.cellPhoneNo = cellPhoneNo;  
+        }  
+      
+        private String cellPhoneNo = "";  
+    }  
+
+
+下面来看序列化的操作
+
+SerializablePersonToFile
+
+[java] view plaincopy
+
+    package org.sky.io;  
+      
+    import java.io.*;  
+    import java.util.*;  
+      
+    public class SerializablePersonToFile {  
+      
+        /** 
+         * @param args 
+         */  
+        private List<Person> initList() {  
+            List<Person> userList = new ArrayList<Person>();  
+            Person loginUser = new Person();  
+            loginUser.setName("sam");  
+            loginUser.setAge("30");  
+            loginUser.setCellPhoneNo("13333333333");  
+            loginUser.setPersonId("111111111111111111");  
+            userList.add(loginUser);  
+            loginUser = new Person();  
+            loginUser.setName("tonny");  
+            loginUser.setAge("31");  
+            loginUser.setCellPhoneNo("14333333333");  
+            loginUser.setPersonId("111111111111111111");  
+            userList.add(loginUser);  
+            loginUser = new Person();  
+            loginUser.setName("jim");  
+            loginUser.setAge("28");  
+            loginUser.setCellPhoneNo("15333333333");  
+            loginUser.setPersonId("111111111111111111");  
+            userList.add(loginUser);  
+            loginUser = new Person();  
+            loginUser.setName("Simon");  
+            loginUser.setAge("30");  
+            loginUser.setCellPhoneNo("17333333333");  
+            loginUser.setPersonId("111111111111111111");  
+            userList.add(loginUser);  
+            return userList;  
+        }  
+      
+        private  void serializeFromFile() {  
+            FileInputStream fs = null;  
+            ObjectInputStream ois = null;  
+            try {  
+                fs = new FileInputStream("person.txt");  
+                ois = new ObjectInputStream(fs);  
+                List<Person> userList = (ArrayList<Person>) ois.readObject();  
+                for (Person p : userList) {  
+                    System.out.println(p.getName() + "   " + p.getAge() + "   "  
+                            + p.getCellPhoneNo() + "   " + p.getCellPhoneNo());  
+                }  
+            } catch (Exception ex) {  
+                ex.printStackTrace();  
+            } finally {  
+                try {  
+                    if (ois != null) {  
+                        ois.close();  
+                    }  
+                } catch (Exception e) {  
+                }  
+                try {  
+                    if (fs != null) {  
+                        fs.close();  
+                    }  
+                } catch (Exception e) {  
+                }  
+            }  
+        }  
+      
+        private void serializeToFile() {  
+            List<Person> userList = new ArrayList<Person>();  
+            userList = initList();  
+            FileOutputStream fs = null;  
+            ObjectOutputStream os = null;  
+            try {  
+                fs = new FileOutputStream("person.txt");  
+                os = new ObjectOutputStream(fs);  
+                os.writeObject(userList);  
+            } catch (Exception ex) {  
+                ex.printStackTrace();  
+            } finally {  
+                try {  
+                    if (os != null) {  
+                        os.close();  
+                    }  
+                } catch (Exception e) {  
+                }  
+                try {  
+                    if (fs != null) {  
+                        fs.close();  
+                    }  
+                } catch (Exception e) {  
+                }  
+            }  
+        }  
+      
+        public static void main(String[] args) {  
+            SerializablePersonToFile sf = new SerializablePersonToFile();  
+            sf.serializeToFile();  
+            sf.serializeFromFile();  
+        }  
+      
+    }  
+
+
+这边先把Person输出到Person.txt，再从Person.txt里反序列化出这个Person的Java Bean。
+
+
+先讲这么些吧！
+
+Java的流操作还有很多，这些是经常会被面试到的，很基础，因此经常被考到。
+
+以前听一个读IT的同学说过，这些IO操作，就算没有Eclipse编辑器的话，用文本编辑器也应该能够写出来，你写不出只能代表你的基础太弱了。
+
+
+ 
