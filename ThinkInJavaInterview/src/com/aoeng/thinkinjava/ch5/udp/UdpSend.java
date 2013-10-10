@@ -41,8 +41,7 @@ public class UdpSend {
 		while ((line = bfr.readLine()) != null) {
 
 			byte[] buf = line.getBytes();
-			DatagramPacket dp = new DatagramPacket(buf, buf.length,
-					InetAddress.getByName("127.0.0.1"), 10000);
+			DatagramPacket dp = new DatagramPacket(buf, buf.length, InetAddress.getByName("192.168.7.92"), 10000);
 
 			ds.send(dp);
 			System.out.println("Data Send ok");
