@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.aoeng.thinkinjava.ch5.udp;
+package com.aoeng.thinkinjava.ch5.net.udp;
 
 import java.io.BufferedReader;
 import java.io.IOException;

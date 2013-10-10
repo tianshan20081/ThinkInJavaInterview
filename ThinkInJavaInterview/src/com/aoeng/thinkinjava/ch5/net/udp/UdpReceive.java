@@ -1,4 +1,4 @@
-package com.aoeng.thinkinjava.ch5.udp;
+package com.aoeng.thinkinjava.ch5.net.udp;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
