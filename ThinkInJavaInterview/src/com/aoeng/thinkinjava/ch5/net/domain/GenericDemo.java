@@ -1,4 +1,4 @@
-package com.aoeng.thinkinjava.ch5.generic;
+package com.aoeng.thinkinjava.ch5.net.domain;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.aoeng.thinkinjava.ch5.domain.Person;
 
 /*
  * 泛型 jdk 1.5 之后  解决程序中的安全问题，将要出现的问题 由运行时期，提前到编译时期。

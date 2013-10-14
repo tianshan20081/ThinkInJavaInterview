@@ -1,4 +1,4 @@
-package com.aoeng.thinkinjava.ch5.domain;
+package com.aoeng.thinkinjava.ch5.net.domain;
 
 public class Person implements Comparable<Person> {
 
@@ -62,13 +62,12 @@ public class Person implements Comparable<Person> {
 		return true;
 	}
 
-
 	@Override
 	public int compareTo(Person person) {
 		// TODO Auto-generated method stub
 		int num = this.age - person.age;
 		return num == 0 ? this.name.compareTo(person.name) : num;
-	
+
 	}
 
 }
