@@ -28,6 +28,18 @@ public class PhysicalRocket {
 		this.totalMass = totalMass;
 	}
 
+	public double getMass(double time) {
+		return 0;
+	}
+
+	public double getBurnTime() {
+		return 0;
+	}
+
+	public double getThrust(double time) {
+		return 0;
+	}
+
 	/**
 	 * @return the burnArea
 	 */
