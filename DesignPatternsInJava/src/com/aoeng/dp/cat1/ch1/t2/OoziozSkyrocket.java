@@ -3,6 +3,8 @@
  */
 package com.aoeng.dp.cat1.ch1.t2;
 
+import javax.swing.table.AbstractTableModel;
+
 import com.aoeng.dp.cat1.ch1.t1.PhysicalRocket;
 
 /**
