@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.aoeng.dp.cat1.ch1;
+package com.aoeng.dp.cat1.ch1.t1;
 
 /**
  * @author [ShaoCheng Zhang] Oct 16, 2013:2:58:47 PM
