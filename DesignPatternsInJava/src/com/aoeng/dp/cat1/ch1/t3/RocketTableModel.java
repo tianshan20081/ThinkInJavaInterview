@@ -12,7 +12,6 @@ import javax.swing.table.AbstractTableModel;
 public class RocketTableModel extends AbstractTableModel {
 
 	private Rocket[] rockets;
-
 	/*
 	 * (non-Javadoc)
 	 * 
